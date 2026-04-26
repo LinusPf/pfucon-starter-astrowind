@@ -1,3 +1,16 @@
+# PfuCon Starter — AstroWind + Sanity
+
+> **PfuCon-Fork** — Sanity-Integration für Homepage-Marketing-Sektionen.
+> Basis für alle PfuCon-Kundenprojekte (Linus Pfurtscheller, Pfurtscheller Consulting).
+>
+> Stack: Astro 5 + Tailwind CSS + Sanity (nur `/`) + Netlify
+>
+> Für neues Kundenprojekt: `git clone` → Sanity Project-ID setzen → `npm run dev`
+>
+> Original-AstroWind-Doku ab Zeile 15.
+
+---
+
 # 🚀 AstroWind
 
 <img src="https://raw.githubusercontent.com/arthelokyo/.github/main/resources/astrowind/lighthouse-score.png" align="right"
