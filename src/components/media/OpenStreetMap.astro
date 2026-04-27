@@ -1,0 +1,85 @@
+---
+/**
+ * DSGVO-konformes OpenStreetMap-Embed.
+ * Karte lädt erst nach explizitem Klick des Nutzers (Consent-Gate).
+ * OpenStreetMap setzt technisch notwendige Session-Cookies, kein Tracking.
+ */
+export interface Props {
+  lat: number;
+  lon: number;
+  zoom?: number;
+  height?: string;
+  title?: string;
+  markerLabel?: string;
+}
+
+const { lat, lon, zoom = 15, height = '400px', title = 'Standortkarte', markerLabel } = Astro.props;
+
+const mapId = `osm-${Math.random().toString(36).slice(2, 7)}`;
+const bbox = (() => {
+  const delta = 0.01;
+  return `${lon - delta},${lat - delta},${lon + delta},${lat + delta}`;
+})();
+const embedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
+const linkHref = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}`;
+---
+
+<div id={mapId} class="relative w-full rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-slate-800" style={`height: ${height};`}>
+  <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 p-4 text-center map-placeholder">
+    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+    </svg>
+    <p class="text-sm text-gray-600 dark:text-gray-400 max-w-xs">
+      Interaktive Karte (OpenStreetMap).<br />
+      Klicken Sie zum Laden.
+    </p>
+    <button
+      type="button"
+      class="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-secondary transition-colors map-load-btn"
+      data-map-id={mapId}
+      data-embed-src={embedSrc}
+      data-title={title}
+    >
+      Karte laden
+    </button>
+    <p class="text-xs text-gray-400">
+      Mit dem Laden stimmen Sie der Datenverarbeitung durch
+      <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" class="underline">OpenStreetMap Foundation</a>
+      zu.
+    </p>
+  </div>
+</div>
+
+{markerLabel && (
+  <p class="mt-1 text-sm text-center text-gray-500 dark:text-gray-400">{markerLabel}</p>
+)}
+
+<div class="mt-1 text-right">
+  <a href={linkHref} target="_blank" rel="noopener noreferrer" class="text-xs text-gray-400 hover:underline">
+    Größere Karte ansehen
+  </a>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.map-load-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const mapId = btn.dataset.mapId!;
+      const embedSrc = btn.dataset.embedSrc!;
+      const title = btn.dataset.title ?? 'Karte';
+      const container = document.getElementById(mapId);
+      if (!container) return;
+
+      const iframe = document.createElement('iframe');
+      iframe.src = embedSrc;
+      iframe.title = title;
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+      iframe.loading = 'lazy';
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+
+      container.querySelector('.map-placeholder')?.remove();
+      container.appendChild(iframe);
+    });
+  });
+</script>

@@ -17,6 +17,8 @@ import Pricing from '~/components/widgets/Pricing.astro'
 import Brands from '~/components/widgets/Brands.astro'
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro'
 import Contact from '~/components/widgets/Contact.astro'
+import LiteYouTube from '~/components/media/LiteYouTube.astro'
+import { urlFor } from '~/lib/sanity'
 import type { SanityWidget } from '~/lib/queries'
 
 interface Props {
@@ -57,6 +59,12 @@ const { pageBuilder } = Astro.props
   if (type === 'brandsWidget') return <Brands {...(widget as any)} />
   if (type === 'blogLatestPostsWidget') return <BlogLatestPosts {...(widget as any)} />
   if (type === 'contactWidget') return <Contact {...(widget as any)} />
+
+  if (type === 'videoBlock') {
+    const v = widget as any
+    const thumbUrl = v.thumbnail?.asset ? urlFor(v.thumbnail).width(1280).height(720).url() : undefined
+    return <LiteYouTube videoId={v.videoId} title={v.title ?? 'Video'} thumbnailUrl={thumbUrl} caption={v.caption} />
+  }
 
   return null
 })}

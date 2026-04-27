@@ -13,6 +13,7 @@ import Analytics from '~/components/common/Analytics.astro';
 import Plausible from '~/components/analytics/Plausible.astro';
 import OrganizationSchema from '~/components/seo/OrganizationSchema.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
+import CookieBannerSlot from '~/components/common/CookieBannerSlot.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -48,5 +49,6 @@ const { language, textDirection } = I18N;
 
     <OrganizationSchema />
     <BasicScripts />
+    <CookieBannerSlot />
   </body>
 </html>

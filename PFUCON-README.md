@@ -180,6 +180,10 @@ da alle Daten ohnehin public sind (read-only Sanity Dataset).
 | `SEO-INVENTORY.md` | Vollständiges SEO-Feature-Inventar |
 | `SEO-CHECKLIST.md` | Pro-Kunden Go-Live Checkliste |
 | `SEO-VALIDATION.md` | Validation-Protokoll (Lighthouse, Rich Results, etc.) |
+| `COOKIE-INVENTORY.md` | Cookie-Audit des Default-Stacks |
+| `COOKIE-DECISION.md` | Entscheidungsbaum Cookie-Banner ja/nein |
+| `COOKIE-CHECKLIST.md` | Pro-Kunden DSGVO Go-Live Checkliste |
+| `COOKIE-BANNER-SETUP.md` | Consent Mode v2 + Banner-Bibliothek-Integration |
 
 ---
 
@@ -242,3 +246,64 @@ Folgt der [llmstxt.org](https://llmstxt.org) Spezifikation. Wird automatisch
 aus Sanity-Daten generiert (Sitename, Tagline, Description + Blog-Posts der
 letzten 6 Monate). USP gegenüber WordPress-Konkurrenten: die meisten WP-Sites
 haben keine llms.txt.
+
+---
+
+## DSGVO & Cookie-Foundation (Phase 9)
+
+### Cookiefreier Default-Stack
+
+Der PfuCon Starter ist by default **cookiefrei**. Beim ersten Seitenaufruf werden **0 Cookies** gesetzt.
+
+| Bereich | Lösung | Status |
+|---------|--------|--------|
+| Schriften | `@fontsource-variable/inter` — lokal, kein Google Fonts CDN | ✅ |
+| Analytics | Plausible (cookiefrei) via `PUBLIC_PLAUSIBLE_DOMAIN` | ✅ opt-in |
+| YouTube | `LiteYouTube.astro` — Click-to-Load, `youtube-nocookie.com` | ✅ |
+| Karten | `StaticMap.astro` (0 Requests) + `OpenStreetMap.astro` (Click-to-Load) | ✅ |
+| Kontaktformular | `ContactForm.astro` — Netlify Forms, Honeypot, kein reCAPTCHA | ✅ |
+| Cookie-Banner | `CookieBannerSlot.astro` — inaktiv by default | ✅ opt-in |
+
+### Neue DSGVO-Komponenten
+
+| Datei | Beschreibung |
+|-------|-------------|
+| `src/components/media/LiteYouTube.astro` | YouTube Click-to-Load (Poster + Play-Button) |
+| `src/components/media/StaticMap.astro` | Adresskarte ohne externe Requests |
+| `src/components/media/OpenStreetMap.astro` | OSM-Embed mit Click-to-Load-Gate |
+| `src/components/forms/ContactForm.astro` | Netlify Forms + Honeypot + Datenschutz-Checkbox |
+| `src/components/common/CookieBannerSlot.astro` | Slot für Cookie-Banner (env-gesteuert) |
+| `src/pages/datenschutz.astro` | Datenschutzerklärung-Stub (TODO-Felder befüllen) |
+| `src/pages/impressum.astro` | Impressum-Stub (TODO-Felder befüllen) |
+
+### Cookie-Banner aktivieren
+
+Nur nötig wenn Google Analytics, Google Ads oder andere Tracking-Dienste aktiv sind:
+
+```bash
+# Netlify Env-Var:
+PUBLIC_COOKIE_BANNER_ENABLED=true
+```
+
+Dann eigene Banner-Bibliothek in `Layout.astro` via `<CookieBannerSlot>` einbinden.
+Details: `COOKIE-BANNER-SETUP.md`
+
+### DSGVO-Entscheidungsbaum
+
+`COOKIE-DECISION.md` — Schnellcheck: Wann braucht welcher Kunde einen Cookie-Banner?
+
+### DSGVO-relevante Env-Vars
+
+| Variable | Default | Beschreibung |
+|----------|---------|--------------|
+| `PUBLIC_COOKIE_BANNER_ENABLED` | `false` | Cookie-Banner aktivieren |
+| `PUBLIC_PLAUSIBLE_DOMAIN` | leer | Plausible Analytics aktivieren |
+
+### DSGVO-Dokumente
+
+| Dokument | Inhalt |
+|----------|--------|
+| `COOKIE-INVENTORY.md` | Vollständiger Cookie-Audit des Default-Stacks |
+| `COOKIE-DECISION.md` | Entscheidungsbaum: Banner ja/nein? |
+| `COOKIE-CHECKLIST.md` | Pro-Kunden Go-Live Checkliste (DSGVO) |
+| `COOKIE-BANNER-SETUP.md` | Consent Mode v2 + Banner-Integration Anleitung |

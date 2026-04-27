@@ -1,4 +1,5 @@
 import {ctaButton, widgetItem} from './shared'
+import {videoBlock} from './videoBlock'
 import {heroWidget} from './heroWidget'
 import {hero2Widget} from './hero2Widget'
 import {heroTextWidget} from './heroTextWidget'
@@ -23,6 +24,7 @@ export const schemaTypes = [
   // Shared objects
   ctaButton,
   widgetItem,
+  videoBlock,
   // Widget object types (used inside homePage.pageBuilder)
   heroWidget,
   hero2Widget,

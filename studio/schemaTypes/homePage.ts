@@ -45,6 +45,7 @@ export const homePage = defineType({
         {type: 'brandsWidget'},
         {type: 'blogLatestPostsWidget'},
         {type: 'contactWidget'},
+        {type: 'videoBlock'},
       ],
       options: {
         // Show type selection modal with readable titles
@@ -54,6 +55,7 @@ export const homePage = defineType({
             {name: 'content', title: 'Content', of: ['contentWidget', 'featuresWidget', 'stepsWidget']},
             {name: 'social', title: 'Social Proof', of: ['testimonialsWidget', 'statsWidget', 'brandsWidget']},
             {name: 'conversion', title: 'Conversion', of: ['callToActionWidget', 'pricingWidget', 'contactWidget']},
+            {name: 'media', title: 'Medien', of: ['videoBlock']},
             {name: 'misc', title: 'Sonstiges', of: ['noteWidget', 'faqsWidget', 'blogLatestPostsWidget']},
           ],
         },
