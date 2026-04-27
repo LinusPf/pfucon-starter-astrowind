@@ -1,0 +1,70 @@
+---
+import Hero from '~/components/widgets/Hero.astro'
+import Hero2 from '~/components/widgets/Hero2.astro'
+import HeroText from '~/components/widgets/HeroText.astro'
+import Note from '~/components/widgets/Note.astro'
+import Features from '~/components/widgets/Features.astro'
+import Features2 from '~/components/widgets/Features2.astro'
+import Features3 from '~/components/widgets/Features3.astro'
+import Content from '~/components/widgets/Content.astro'
+import Steps from '~/components/widgets/Steps.astro'
+import Steps2 from '~/components/widgets/Steps2.astro'
+import FAQs from '~/components/widgets/FAQs.astro'
+import Stats from '~/components/widgets/Stats.astro'
+import CallToAction from '~/components/widgets/CallToAction.astro'
+import Testimonials from '~/components/widgets/Testimonials.astro'
+import Pricing from '~/components/widgets/Pricing.astro'
+import Brands from '~/components/widgets/Brands.astro'
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro'
+import Contact from '~/components/widgets/Contact.astro'
+import LiteYouTube from '~/components/media/LiteYouTube.astro'
+import { urlFor } from '~/lib/sanity'
+import type { SanityWidget } from '~/lib/queries'
+
+interface Props {
+  pageBuilder: SanityWidget[]
+}
+
+const { pageBuilder } = Astro.props
+---
+
+{pageBuilder.map((widget) => {
+  const type = widget._type
+
+  if (type === 'heroWidget') return <Hero {...(widget as any)} />
+  if (type === 'hero2Widget') return <Hero2 {...(widget as any)} />
+  if (type === 'heroTextWidget') return <HeroText {...(widget as any)} />
+  if (type === 'noteWidget') return <Note {...(widget as any)} />
+
+  if (type === 'featuresWidget') {
+    const variant = (widget as any).variant ?? 'features'
+    if (variant === 'features2') return <Features2 {...(widget as any)} />
+    if (variant === 'features3') return <Features3 {...(widget as any)} />
+    return <Features {...(widget as any)} />
+  }
+
+  if (type === 'contentWidget') return <Content {...(widget as any)} />
+
+  if (type === 'stepsWidget') {
+    const variant = (widget as any).variant ?? 'steps'
+    if (variant === 'steps2') return <Steps2 {...(widget as any)} />
+    return <Steps {...(widget as any)} />
+  }
+
+  if (type === 'faqsWidget') return <FAQs {...(widget as any)} />
+  if (type === 'statsWidget') return <Stats {...(widget as any)} />
+  if (type === 'callToActionWidget') return <CallToAction {...(widget as any)} />
+  if (type === 'testimonialsWidget') return <Testimonials {...(widget as any)} />
+  if (type === 'pricingWidget') return <Pricing {...(widget as any)} />
+  if (type === 'brandsWidget') return <Brands {...(widget as any)} />
+  if (type === 'blogLatestPostsWidget') return <BlogLatestPosts {...(widget as any)} />
+  if (type === 'contactWidget') return <Contact {...(widget as any)} />
+
+  if (type === 'videoBlock') {
+    const v = widget as any
+    const thumbUrl = v.thumbnail?.asset ? urlFor(v.thumbnail).width(1280).height(720).url() : undefined
+    return <LiteYouTube videoId={v.videoId} title={v.title ?? 'Video'} thumbnailUrl={thumbUrl} caption={v.caption} />
+  }
+
+  return null
+})}

@@ -1,0 +1,17 @@
+---
+/**
+ * Plausible Analytics — nur geladen wenn PUBLIC_PLAUSIBLE_DOMAIN gesetzt ist.
+ * Self-hosted: PUBLIC_PLAUSIBLE_URL setzen (z. B. https://plausible.example.com)
+ * Default: hosted auf plausible.io
+ */
+const domain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN
+const scriptBase = import.meta.env.PUBLIC_PLAUSIBLE_URL ?? 'https://plausible.io'
+---
+
+{domain && (
+  <script
+    defer
+    data-domain={domain}
+    src={`${scriptBase}/js/script.js`}
+  />
+)}

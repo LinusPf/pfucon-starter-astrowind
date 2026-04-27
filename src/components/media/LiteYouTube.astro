@@ -1,0 +1,92 @@
+---
+/**
+ * DSGVO-konformes YouTube-Embed.
+ * Lädt NICHTS von YouTube bis der Nutzer explizit auf Play klickt.
+ * Verwendet youtube-nocookie.com (kein Tracking-Cookie ohne Interaktion).
+ */
+export interface Props {
+  videoId: string;
+  title: string;
+  thumbnailUrl?: string;
+  caption?: string;
+}
+
+const { videoId, title, thumbnailUrl, caption } = Astro.props;
+
+const embedId = `yt-${videoId}-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<figure class="my-6">
+  <div
+    id={embedId}
+    class="relative w-full overflow-hidden rounded-lg bg-gray-900 cursor-pointer group"
+    style="aspect-ratio: 16/9;"
+    data-video-id={videoId}
+    data-title={title}
+    role="button"
+    tabindex="0"
+    aria-label={`Video abspielen: ${title}`}
+  >
+    {thumbnailUrl ? (
+      <img
+        src={thumbnailUrl}
+        alt={title}
+        class="w-full h-full object-cover transition-opacity group-hover:opacity-80"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="w-full h-full bg-gray-800 flex items-center justify-center">
+        <span class="text-gray-400 text-sm">Video: {title}</span>
+      </div>
+    )}
+
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+      <div class="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:bg-red-700 transition-colors">
+        <svg class="w-7 h-7 text-white translate-x-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="absolute bottom-2 left-2 right-2 text-center">
+      <p class="text-xs text-white/70 bg-black/40 rounded px-2 py-1 inline-block">
+        Klicken zum Abspielen — Video wird von YouTube (youtube-nocookie.com) geladen
+      </p>
+    </div>
+  </div>
+
+  {caption && (
+    <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('[data-video-id]').forEach((wrapper) => {
+    const activate = () => {
+      const videoId = wrapper.dataset.videoId!;
+      const title = wrapper.dataset.title ?? 'Video';
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+      iframe.title = title;
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 w-full h-full';
+      wrapper.innerHTML = '';
+      wrapper.appendChild(iframe);
+      wrapper.removeAttribute('role');
+      wrapper.removeAttribute('tabindex');
+      wrapper.style.cursor = 'default';
+    };
+
+    wrapper.addEventListener('click', activate);
+    wrapper.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activate();
+      }
+    });
+  });
+</script>

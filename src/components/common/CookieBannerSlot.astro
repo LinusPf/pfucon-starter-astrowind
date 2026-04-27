@@ -1,0 +1,22 @@
+---
+/**
+ * Cookie-Banner Slot — inaktiv by default.
+ *
+ * Aktivierung: PUBLIC_COOKIE_BANNER_ENABLED=true setzen.
+ * Dann eigenen Banner in Layout.astro in den Slot injizieren:
+ *
+ *   <CookieBannerSlot>
+ *     <MeinCookieBanner />
+ *   </CookieBannerSlot>
+ *
+ * Geeignete Bibliotheken (selbst integrieren):
+ *   - cookieconsent (Orestbida) — MIT, keine Abhängigkeiten
+ *   - Klaro — Open Source
+ *   - CookieFirst / Cookiebot — SaaS mit Consent Mode v2
+ *
+ * Siehe COOKIE-BANNER-SETUP.md für Anleitung.
+ */
+const enabled = import.meta.env.PUBLIC_COOKIE_BANNER_ENABLED === 'true';
+---
+
+{enabled && <slot />}

@@ -1,0 +1,45 @@
+---
+import {fetchSiteSettings} from '~/lib/queries'
+import {urlFor, isSanityConfigured} from '~/lib/sanity'
+import {SITE} from 'astrowind:config'
+
+if (!isSanityConfigured) return
+
+const settings = await fetchSiteSettings()
+if (!settings) return
+
+const logoUrl = settings.logo ? urlFor(settings.logo).width(400).url() : undefined
+
+const schema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': settings.businessType ?? 'Organization',
+  name: settings.siteName ?? SITE?.name,
+  url: settings.url ?? Astro.site?.href,
+}
+
+if (logoUrl) schema.logo = logoUrl
+if (settings.telephone) schema.telephone = settings.telephone
+if (settings.email) schema.email = settings.email
+if (settings.socialProfiles?.length) schema.sameAs = settings.socialProfiles
+
+if (settings.address?.streetAddress) {
+  schema.address = {
+    '@type': 'PostalAddress',
+    streetAddress: settings.address.streetAddress,
+    addressLocality: settings.address.addressLocality,
+    postalCode: settings.address.postalCode,
+    addressCountry: settings.address.addressCountry ?? 'AT',
+  }
+}
+
+if (settings.openingHours?.length) {
+  schema.openingHoursSpecification = settings.openingHours.map(
+    (entry: {days: string; hours: string}) => {
+      const [opens, closes] = entry.hours.split('-')
+      return {'@type': 'OpeningHoursSpecification', opens, closes}
+    }
+  )
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

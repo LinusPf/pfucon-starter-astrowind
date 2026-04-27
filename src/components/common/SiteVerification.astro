@@ -1,5 +1,10 @@
 ---
-import { SITE } from 'astrowind:config';
+import {SITE} from 'astrowind:config'
+
+// Env-Vars haben Vorrang vor config.yaml (pro-Kunde überschreibbar)
+const googleCode = import.meta.env.PUBLIC_GSC_VERIFICATION || SITE?.googleSiteVerificationId
+const bingCode   = import.meta.env.PUBLIC_BING_VERIFICATION
 ---
 
-{SITE.googleSiteVerificationId && <meta name="google-site-verification" content={SITE.googleSiteVerificationId} />}
+{googleCode && <meta name="google-site-verification" content={googleCode} />}
+{bingCode   && <meta name="msvalidate.01"             content={bingCode} />}

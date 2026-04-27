@@ -1,0 +1,44 @@
+---
+/**
+ * PfuconSEO — Wrapper um Metadata.astro (astrolib/seo).
+ * Ergänzt: JSON-LD Slot, Default-OG-Image aus Sanity siteSettings.
+ */
+import Metadata from '~/components/common/Metadata.astro'
+import {fetchSiteSettings} from '~/lib/queries'
+import {urlFor, isSanityConfigured} from '~/lib/sanity'
+import type {MetaData} from '~/types'
+
+interface Props extends MetaData {
+  /** Optionaler JSON-LD-String für seitenspezifisches Schema */
+  jsonLd?: string
+}
+
+const {jsonLd, ...metaProps} = Astro.props
+
+// Default OG-Image aus Sanity siteSettings holen (nur wenn konfiguriert und kein eigenes Bild)
+let resolvedProps = {...metaProps}
+if (isSanityConfigured && !metaProps.openGraph?.images?.length) {
+  const settings = await fetchSiteSettings()
+  if (settings?.defaultOgImage) {
+    resolvedProps = {
+      ...metaProps,
+      openGraph: {
+        ...metaProps.openGraph,
+        images: [
+          {
+            url: urlFor(settings.defaultOgImage).width(1200).height(628).url(),
+            width: 1200,
+            height: 628,
+          },
+        ],
+      },
+    }
+  }
+}
+---
+
+<Metadata {...resolvedProps} />
+
+{jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
+
+<slot name="jsonLd" />

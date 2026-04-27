@@ -1,0 +1,132 @@
+---
+/**
+ * DSGVO-konformes Kontaktformular mit Netlify Forms.
+ * - Serverseitig verarbeitet von Netlify (kein JavaScript-Fetch nötig)
+ * - Honeypot-Feld gegen Spam (kein reCAPTCHA / kein Tracking-Cookie)
+ * - Pflichtfelder: name, email, message
+ */
+export interface Props {
+  formName?: string;
+  successPage?: string;
+  buttonText?: string;
+  showPrivacyNote?: boolean;
+  privacyUrl?: string;
+}
+
+const {
+  formName = 'contact',
+  successPage = '/?form=success',
+  buttonText = 'Nachricht senden',
+  showPrivacyNote = true,
+  privacyUrl = '/datenschutz',
+} = Astro.props;
+---
+
+<form
+  name={formName}
+  method="POST"
+  action={successPage}
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="flex flex-col gap-5"
+>
+  <input type="hidden" name="form-name" value={formName} />
+
+  <!-- Honeypot (für Bots unsichtbar, echte Nutzer sehen das nicht) -->
+  <p class="hidden" aria-hidden="true">
+    <label>
+      Dieses Feld nicht ausfüllen:
+      <input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+    </label>
+  </p>
+
+  <div>
+    <label for={`${formName}-name`} class="block text-sm font-medium mb-1">
+      Name <span class="text-red-500" aria-hidden="true">*</span>
+    </label>
+    <input
+      type="text"
+      id={`${formName}-name`}
+      name="name"
+      required
+      autocomplete="name"
+      class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+      placeholder="Max Mustermann"
+    />
+  </div>
+
+  <div>
+    <label for={`${formName}-email`} class="block text-sm font-medium mb-1">
+      E-Mail <span class="text-red-500" aria-hidden="true">*</span>
+    </label>
+    <input
+      type="email"
+      id={`${formName}-email`}
+      name="email"
+      required
+      autocomplete="email"
+      class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+      placeholder="max@beispiel.at"
+    />
+  </div>
+
+  <div>
+    <label for={`${formName}-phone`} class="block text-sm font-medium mb-1">
+      Telefon <span class="text-gray-400 text-xs font-normal">(optional)</span>
+    </label>
+    <input
+      type="tel"
+      id={`${formName}-phone`}
+      name="phone"
+      autocomplete="tel"
+      class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+      placeholder="+43 123 456789"
+    />
+  </div>
+
+  <div>
+    <label for={`${formName}-message`} class="block text-sm font-medium mb-1">
+      Nachricht <span class="text-red-500" aria-hidden="true">*</span>
+    </label>
+    <textarea
+      id={`${formName}-message`}
+      name="message"
+      required
+      rows={5}
+      class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-y"
+      placeholder="Ihre Nachricht..."
+    ></textarea>
+  </div>
+
+  {showPrivacyNote && (
+    <div class="flex items-start gap-3">
+      <input
+        type="checkbox"
+        id={`${formName}-privacy`}
+        name="privacy-accepted"
+        required
+        class="mt-0.5 w-4 h-4 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
+      />
+      <label for={`${formName}-privacy`} class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none">
+        Ich habe die{' '}
+        <a href={privacyUrl} class="underline hover:text-primary">Datenschutzerklärung</a>{' '}
+        gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu.
+        <span class="text-red-500" aria-hidden="true"> *</span>
+      </label>
+    </div>
+  )}
+
+  <div>
+    <button
+      type="submit"
+      class="w-full sm:w-auto px-6 py-3 bg-primary hover:bg-secondary text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    >
+      {buttonText}
+    </button>
+  </div>
+
+  <p class="text-xs text-gray-400">
+    <span class="text-red-500">*</span> Pflichtfelder.
+    Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.
+  </p>
+</form>

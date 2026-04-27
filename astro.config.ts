@@ -28,7 +28,12 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false,
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        !page.includes('/404') &&
+        !page.includes('/admin/') &&
+        !page.includes('/_'),
+    }),
     mdx(),
     icon({
       include: {

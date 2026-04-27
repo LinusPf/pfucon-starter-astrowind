@@ -1,0 +1,29 @@
+---
+interface FAQItem {
+  title: string
+  description: string
+}
+
+interface Props {
+  items: FAQItem[]
+}
+
+const {items} = Astro.props
+
+if (!items?.length) return
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((item) => ({
+    '@type': 'Question',
+    name: item.title,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.description,
+    },
+  })),
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

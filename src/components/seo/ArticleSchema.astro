@@ -1,0 +1,29 @@
+---
+import type {Post} from '~/types'
+
+interface Props {
+  post: Post
+}
+
+const {post} = Astro.props
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.excerpt ?? '',
+  datePublished: post.publishDate?.toISOString(),
+  dateModified: (post.updateDate ?? post.publishDate)?.toISOString(),
+  author: post.author
+    ? {'@type': 'Person', name: post.author}
+    : undefined,
+  image: post.image
+    ? typeof post.image === 'string'
+      ? post.image
+      : (post.image as {src: string}).src
+    : undefined,
+  url: new URL(post.permalink, Astro.site).href,
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
