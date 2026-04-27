@@ -1,7 +1,7 @@
 # PfuCon Starter — AstroWind + Sanity
 
 > **PfuCon-Fork** — Sanity-Integration für Homepage-Marketing-Sektionen.
-> Basis für alle PfuCon-Kundenprojekte (Linus Pfurtscheller, Pfurtscheller Consulting).
+> Basis für alle PfuCon-Kundenprojekte.
 >
 > Stack: Astro 5 + Tailwind CSS + Sanity (nur `/`) + Netlify
 >

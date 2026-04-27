@@ -3,7 +3,7 @@
 **Repo:** `LinusPf/pfucon-starter-astro` (Fork von `onwidget/astrowind`)
 **Ziel:** Default-Starter für PfuCon-Astro-Projekte mit minimaler Sanity-Integration für Homepage-Marketing-Sektionen und SEO-Komplettausstattung
 **Stack:** Astro 5 + Tailwind + Sanity (nur Homepage) + Netlify
-**Owner:** Linus Pfurtscheller, Pfurtscheller Consulting
+**Owner:** PfuCon
 
 ---
 

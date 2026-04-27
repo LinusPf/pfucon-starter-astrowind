@@ -1,6 +1,6 @@
 # PfuCon Starter — Technische Dokumentation
 
-Internes Referenz-Dokument für Linus Pfurtscheller / Pfurtscheller Consulting.
+Internes Referenz-Dokument für PfuCon.
 Beschreibt Architektur, Widget-Mapping und den Workflow für neue Kundenprojekte.
 
 ---
