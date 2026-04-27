@@ -177,3 +177,68 @@ da alle Daten ohnehin public sind (read-only Sanity Dataset).
 | `SETUP-NEW-CLIENT.md` | Schritt-für-Schritt Onboarding |
 | `WIDGETS-INVENTORY.md` | Vollständiges Widget-Props-Inventar |
 | `scripts/setup-new-client.sh` | Onboarding-Automatisierung |
+| `SEO-INVENTORY.md` | Vollständiges SEO-Feature-Inventar |
+| `SEO-CHECKLIST.md` | Pro-Kunden Go-Live Checkliste |
+| `SEO-VALIDATION.md` | Validation-Protokoll (Lighthouse, Rich Results, etc.) |
+
+---
+
+## SEO-Foundation (Phase 8)
+
+### Aktive SEO-Features
+
+| Feature | Implementierung |
+|---------|----------------|
+| Meta-Tags (title, description, canonical, robots) | `Metadata.astro` via `@astrolib/seo` |
+| Open Graph + Twitter Cards | `Metadata.astro` |
+| Default OG-Image aus Sanity | `PfuconSEO.astro` → `siteSettings.defaultOgImage` |
+| JSON-LD Slot (seitenspezifisch) | `PfuconSEO.astro` prop `jsonLd` oder `<slot name="jsonLd">` |
+| Organization / LocalBusiness Schema | `OrganizationSchema.astro` (automatisch in jedem Layout) |
+| Article Schema | `ArticleSchema.astro` (manuell in Blog-Post-Layout einbinden) |
+| FAQ Schema | `FAQSchema.astro` (manuell bei FAQ-Sektionen einbinden) |
+| Breadcrumb Schema | `BreadcrumbSchema.astro` (manuell auf Sub-Pages einbinden) |
+| XML-Sitemap | `@astrojs/sitemap` — `/sitemap-index.xml` |
+| robots.txt (dynamisch) | `src/pages/robots.txt.ts` — enthält Sitemap-URL + AI-Crawler-Blöcke |
+| RSS Feed | `src/pages/rss.xml.ts` + `<link rel="alternate">` im `<head>` |
+| llms.txt | `src/pages/llms.txt.ts` — AI-Crawler-Steuerung |
+| Google Search Console Verify | `SiteVerification.astro` — config.yaml oder `PUBLIC_GSC_VERIFICATION` |
+| Bing Webmaster Verify | `SiteVerification.astro` — `PUBLIC_BING_VERIFICATION` |
+| Plausible Analytics | `Plausible.astro` — aktiviert via `PUBLIC_PLAUSIBLE_DOMAIN` |
+| SmartImage | `SmartImage.astro` — lazy/async defaults |
+
+### Was pro Kundenprojekt zu befüllen ist
+
+1. **Sanity `siteSettings`-Dokument** (wichtigster Schritt):
+   - Unternehmensname, businessType, Adresse, Telefon, Logo
+   - Default OG-Bild (1200×628)
+   - Social-Profile-URLs
+2. **Env-Vars auf Netlify** (nach SETUP-NEW-CLIENT.md):
+   - `PUBLIC_SANITY_PROJECT_ID`
+   - `PUBLIC_GSC_VERIFICATION` oder DNS-Verify
+   - `PUBLIC_BING_VERIFICATION`
+   - `PUBLIC_PLAUSIBLE_DOMAIN`
+3. **Sanity Homepage-Dokument**: SEO Titel + Meta-Description setzen
+
+### SEO-relevante Env-Vars
+
+| Variable | Pflicht | Beschreibung |
+|----------|---------|--------------|
+| `PUBLIC_SANITY_PROJECT_ID` | Ja | Sanity Project ID |
+| `PUBLIC_SANITY_DATASET` | Nein | Default: `production` |
+| `PUBLIC_GSC_VERIFICATION` | Nein | Google Search Console Meta-Verify |
+| `PUBLIC_BING_VERIFICATION` | Nein | Bing Webmaster Tools Verify |
+| `PUBLIC_PLAUSIBLE_DOMAIN` | Nein | Plausible Analytics Domain |
+| `PUBLIC_PLAUSIBLE_URL` | Nein | Self-hosted Plausible URL |
+
+### AI-Crawler Kontrolle (robots.txt)
+
+`src/pages/robots.txt.ts` enthält auskommentierte Blöcke für GPTBot, ClaudeBot,
+Google-Extended und Applebot-Extended. Für Kunden die AI-Training-Crawling
+einschränken wollen: Blöcke einkommentieren und neu deployen.
+
+### llms.txt
+
+Folgt der [llmstxt.org](https://llmstxt.org) Spezifikation. Wird automatisch
+aus Sanity-Daten generiert (Sitename, Tagline, Description + Blog-Posts der
+letzten 6 Monate). USP gegenüber WordPress-Konkurrenten: die meisten WP-Sites
+haben keine llms.txt.

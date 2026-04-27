@@ -7,9 +7,11 @@ import CommonMeta from '~/components/common/CommonMeta.astro';
 import Favicons from '~/components/Favicons.astro';
 import CustomStyles from '~/components/CustomStyles.astro';
 import ApplyColorMode from '~/components/common/ApplyColorMode.astro';
-import Metadata from '~/components/common/Metadata.astro';
+import PfuconSEO from '~/components/common/PfuconSEO.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
+import Plausible from '~/components/analytics/Plausible.astro';
+import OrganizationSchema from '~/components/seo/OrganizationSchema.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
 
 // Comment the line below to disable View Transitions
@@ -32,9 +34,10 @@ const { language, textDirection } = I18N;
     <Favicons />
     <CustomStyles />
     <ApplyColorMode />
-    <Metadata {...metadata} />
+    <PfuconSEO {...metadata} />
     <SiteVerification />
     <Analytics />
+    <Plausible />
 
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
@@ -43,6 +46,7 @@ const { language, textDirection } = I18N;
   <body class="antialiased text-default bg-page tracking-tight">
     <slot />
 
+    <OrganizationSchema />
     <BasicScripts />
   </body>
 </html>

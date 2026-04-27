@@ -29,3 +29,49 @@ export async function fetchHomePage(): Promise<SanityHomePage | null> {
     return null
   }
 }
+
+// ── Site Settings ────────────────────────────────────────────────────────────
+
+export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
+  siteName,
+  tagline,
+  siteDescription,
+  defaultOgImage,
+  businessType,
+  logo,
+  address,
+  telephone,
+  email,
+  url,
+  openingHours,
+  socialProfiles
+}`
+
+export interface SanitySiteSettings {
+  siteName?: string
+  tagline?: string
+  siteDescription?: string
+  defaultOgImage?: unknown
+  businessType?: string
+  logo?: unknown
+  address?: {
+    streetAddress?: string
+    addressLocality?: string
+    postalCode?: string
+    addressCountry?: string
+  }
+  telephone?: string
+  email?: string
+  url?: string
+  openingHours?: Array<{days: string; hours: string}>
+  socialProfiles?: string[]
+}
+
+export async function fetchSiteSettings(): Promise<SanitySiteSettings | null> {
+  if (!isSanityConfigured) return null
+  try {
+    return await client.fetch<SanitySiteSettings>(siteSettingsQuery)
+  } catch {
+    return null
+  }
+}

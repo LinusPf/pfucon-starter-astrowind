@@ -13,7 +13,27 @@ export default defineConfig({
   dataset: 'production',
 
   plugins: [
-    structureTool(),
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title('Inhalt')
+          .items([
+            // Singletons — jeweils genau ein Dokument
+            S.listItem()
+              .title('Homepage')
+              .id('homePage')
+              .child(S.document().schemaType('homePage').documentId('homePage')),
+            S.listItem()
+              .title('Site-Einstellungen')
+              .id('siteSettings')
+              .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+            S.divider(),
+            // Alle anderen Dokument-Typen normal
+            ...S.documentTypeListItems().filter(
+              (item) => !['homePage', 'siteSettings'].includes(item.getId() ?? '')
+            ),
+          ]),
+    }),
     visionTool(),
   ],
 

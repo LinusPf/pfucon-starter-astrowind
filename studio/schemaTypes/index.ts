@@ -15,6 +15,8 @@ import {brandsWidget} from './brandsWidget'
 import {blogLatestPostsWidget} from './blogLatestPostsWidget'
 import {contactWidget} from './contactWidget'
 import {homePage} from './homePage'
+import {siteSettings} from './siteSettings'
+import {seoFields} from './seoFields'
 
 // Shared object types must be registered before widgets that reference them.
 export const schemaTypes = [
@@ -37,6 +39,9 @@ export const schemaTypes = [
   brandsWidget,
   blogLatestPostsWidget,
   contactWidget,
+  // Shared SEO object
+  seoFields,
   // Document types
   homePage,
+  siteSettings,
 ]

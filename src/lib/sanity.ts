@@ -18,3 +18,8 @@ const builder = imageUrlBuilder(client)
 export function urlFor(source: SanityImageSource) {
   return builder.image(source)
 }
+
+/** Gibt eine fertige URL mit festen Dimensionen zurück (verhindert CLS). */
+export function urlForFixed(source: SanityImageSource, width: number, height: number): string {
+  return builder.image(source).width(width).height(height).fit('crop').url()
+}
